@@ -1,0 +1,12 @@
+MANIFEST\.SKIP
+Makefile\.old
+\.gitignore
+\.git/
+\..*\.swp
+.*~
+Log-Log4perl-Lazy-.*
+Log-Log4perl-Lazy-.*\.tar\.gz
+t/boilerplate\.t
+t/manifest\.t
+t/pod-coverage\.t
+t/pod\.t
