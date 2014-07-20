@@ -1,19 +1,30 @@
 use 5.008;
 use strict;
-no strict 'refs';
 use warnings FATAL => 'all';
 
 package Log::Log4perl::Lazy;
+no strict 'refs';
+no warnings 'redefine';
 
+use Carp qw(croak);
 use Params::Lazy;
 require Log::Log4perl;
+
+my @available_levels = qw(TRACE DEBUG INFO WARN ERROR FATAL);
+my %is_available_level = map {$_ => 1} @available_levels;
 
 sub import {
     my ($self_pkg, @levels) = @_;
     my $caller_pkg = caller;
 
     if (@levels == 0) {
-        @levels = qw(TRACE DEBUG INFO WARN ERROR FATAL);
+        @levels = @available_levels;
+    } else {
+        for my $level (@levels) {
+            unless ($is_available_level{$level}) {
+                croak qq("$level" is not exported by the $self_pkg module);
+            }
+        }
     }
 
     my $logger = Log::Log4perl->get_logger($caller_pkg);

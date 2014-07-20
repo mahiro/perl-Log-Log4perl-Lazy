@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 {
     package TestPackage1;
@@ -27,7 +27,8 @@ use Test::More tests => 4;
 
 {
     package TestPackage2;
-    use Log::Log4perl::Lazy;
+    use Log::Log4perl qw(:easy); # DEBUG etc. are defined here
+    use Log::Log4perl::Lazy;     # DEBUG etc. are redefined, which is ok
     our @called;
 
     sub test_sub {
@@ -85,3 +86,10 @@ is_deeply \@TestPackage2::called, [
     'error',
     'fatal',
 ];
+
+{
+    package TestPackage3;
+    use Test::More;
+    eval "use Log::Log4perl::Lazy qw(invalid);";
+    cmp_ok $@, '=~', qr/"invalid" is not exported/;
+}
